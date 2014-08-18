@@ -16,8 +16,31 @@
 //= require jquery_ujs
 //= require jquery.serializeJSON
 //= require underscore
-//
 //= require_tree ./models
+//= require_tree ./views
 //= require_tree ../templates
-//
 //= require_tree .
+
+
+PhotoTagger.showPhotosIndex = function (view, form) {
+  view.render();
+  form.render();
+  $("#content").append(view.$el);
+  $("#content").append(form.$el);
+};
+
+PhotoTagger.showPhotoDetail = function (photo) {
+  var detail = new PhotoTagger.PhotoDetailView(photo);
+  detail.render();
+  $("#content").append(detail.$el);
+};
+
+PhotoTagger.initialize = function() {
+  PhotoTagger.Photo.fetchByUserId(window.currentUserId, function(data) {
+    var view = new PhotoTagger.PhotoListView();
+    var form = new PhotoTagger.PhotoFormView();
+    PhotoTagger.showPhotosIndex(view, form);
+  });
+
+};
+

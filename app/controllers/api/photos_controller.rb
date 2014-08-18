@@ -3,6 +3,7 @@ class Api::PhotosController < ApplicationController
 
   def create
     @photo = current_user.photos.new(photo_params)
+
     if @photo.save
       render :json => @photo
     else
@@ -16,6 +17,19 @@ class Api::PhotosController < ApplicationController
   def index
     @photos = Photo.where("owner_id = ?", params[:user_id])
     render :json => @photos
+  end
+
+  def update
+    @photo = Photo.find(params[:id])
+
+    if @photo.update(photo_params)
+      render :json => @photo
+    else
+      render(
+        :json => @photo.errors.full_messages,
+        :status => :unprocessable_entity
+      )
+    end
   end
 
   private
